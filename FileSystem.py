@@ -14,14 +14,25 @@ import sys
 
 class FileSystem(object):
     def __init__(self):
-        self.file_trie = FileTrie()
         self.redirected = not os.isatty(sys.stdin.fileno())
+        self.root = FileTrie("", True, None)
+        self.current_directory = self.root
 
     def execute(self):
         '''Starts this file system operating'''
         line = self._prompt()
         while line != Constants.QUIT:
-            print(line)
+            command = line.split()[0]
+            line = line[:len(command)]  # Command is the first option
+
+            if command == Constants.PWD:
+                self._pwd()
+
+            elif command == Constants.CD:
+                self._cd(line)
+
+            elif command == Constants.CREATE:
+                self._create(line)
 
             line = self._prompt()
 
@@ -35,7 +46,27 @@ class FileSystem(object):
             user_input = input()
         return user_input
 
+    def _pwd(self):
+        print(self.current_directory.get_full_name())
+
+    def _cd(self, line):
+        if line[0] == Constants.ROOT:
+            self.current_directory = self.root.get_directory(line[1:])
+        else:
+            self.current_directory = self.current_directory.get_directory(line[1:])
+
+    def _create(self, line):
+        if line[0] == Constants.ROOT:
+            self.root.add_file(line[1:])
+        else:
+            self.current_directory.add_file(line[1:])
+
 
 if __name__ == "__main__":
+    # Create root foler if it doesn't already exist
+    if not os.path.isdir(Constants.DIRECTORY_NAME):
+        os.makedirs(Constants.DIRECTORY_NAME)
+
+    # Start file system program
     file_system = FileSystem()
     file_system.execute()

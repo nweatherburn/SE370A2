@@ -33,3 +33,9 @@ DELETE_DIR = "dd"
 QUIT = "quit"
 
 PROMPT = "ffs>"
+
+DIRECTORY_NAME = "A2dir"
+
+DIRECTORY_DIVIDER = "-"
+
+ROOT = "-"
