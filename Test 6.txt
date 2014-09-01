@@ -1,0 +1,44 @@
+clear
+create -fileA
+create -fileB
+create -rrrr-file0
+create -rrrr-file1
+create -rrrr-file2
+create -rrrr-dd-file0
+create -rrrr-dd-file1
+create -rrrr-dd-aaaa-file0
+create -rrrr-dd-aaaa-file1
+create -rrrr-dd-aaaa-file2
+create -rrrr-dd-aaaa-file3
+create -rrrr-dd-aaaa-file4
+create -xx-file0
+create -xx-file1
+create -xx-file2
+create -xx-o-file0
+create -xx-o-file1
+create -xx-o-file2
+create -xx-o-file3
+create -xx-o-file4
+create -xx-o-aaa-file0
+create -xx-o-aaa-file1
+create -xx-o-aaa-file2
+create -xx-o-aaa-file3
+create -xx-o-aaa-file4
+create -xx-o-aaa-xx-file0
+create -xx-o-aaa-xx-file1
+create -xx-o-aaa-xx-file2
+create -xx-o-aaa-xx-file3
+create -xx-o-aaa-xx-file4
+create -xx-o-aaa-xx-file5
+rls
+tree
+dd rrrr
+rls
+tree
+cd xx
+dd o
+rls
+tree
+cd
+tree
+quit

@@ -1,0 +1,10 @@
+clear
+create -fileA
+create -fileB
+add fileA This is the contents of fileA.
+add fileB This is the contents of fileB.
+cat fileA
+cat fileB
+ls
+rls
+quit

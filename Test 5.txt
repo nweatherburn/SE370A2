@@ -1,0 +1,18 @@
+clear
+create -xx-file0
+create -xx-file1
+create -xx-file2
+create -xx-o-file0
+create -xx-o-file1
+create -xx-o-file2
+create -xx-o-file3
+create -xx-o-file4
+create -xx-o-aaa-file0
+create -xx-o-aaa-xx-file1
+ls xx
+tree xx
+delete xx-file1
+cd xx
+ls
+tree
+quit
