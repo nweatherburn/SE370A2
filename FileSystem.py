@@ -9,6 +9,7 @@ SoftEng 370 - Assignment 2
 import Constants
 from FileTrie import FileTrie
 import os
+import subprocess
 import sys
 
 
@@ -31,6 +32,12 @@ class FileSystem(object):
             elif command == Constants.CD:
                 self._cd(line)
 
+            elif command == Constants.LS:
+                self._ls(line)
+
+            elif command == Constants.RLS:
+                self._rls()
+
             elif command == Constants.CREATE:
                 self._create(line)
 
@@ -49,14 +56,28 @@ class FileSystem(object):
     def _pwd(self):
         print(self.current_directory.get_full_name())
 
+    def _ls(self, line):
+        if len(line) == 0:
+            self.current_directory.list_files()
+        elif line[0] == Constants.ROOT:
+            directory = self.root.get_directory(line[1:])
+            directory.list_files()
+        else:
+            directory = self.current_directory.get_directory(line)
+            directory.list_files()
+
+    def _rls(self):
+        subprocess.call(["ls", "-l", Constants.DIRECTORY_NAME])
+
     def _cd(self, line):
-        if line[0] == Constants.ROOT:
+        if len(line) == 0:
+            self.current_directory = self.root
+        elif line[0] == Constants.ROOT:
             self.current_directory = self.root.get_directory(line[1:])
         else:
-            self.current_directory = self.current_directory.get_directory(line[1:])
+            self.current_directory = self.current_directory.get_directory(line)
 
     def _create(self, line):
-        print("Match:", line[0], Constants.ROOT, line[0] == Constants.ROOT)
         if line[0] == Constants.ROOT:
             self.root.add_file(line[1:])
         else:

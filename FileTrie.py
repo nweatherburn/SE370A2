@@ -24,7 +24,7 @@ class FileTrie(object):
         return self.directory
 
     def is_file(self):
-        return not self.is_directory
+        return not self.is_directory()
 
     def get_name(self):
         return self.name
@@ -64,9 +64,16 @@ class FileTrie(object):
             # We're in directory
             return self
         else:
-            self.children[path[0]]._get_directory(path[1:])
+            return self.children[path[0]]._get_directory(path[1:])
 
     def _create_as_file(self):
         file_name = Constants.DIRECTORY_NAME + '/' + self.get_full_name()
         temp_file = open(file_name, 'w')
         temp_file.close()
+
+    def list_files(self):
+        for name, child in sorted(self.children.items()):
+            if child.is_file():
+                print("f:", name)
+            else:
+                print("d:", name)
