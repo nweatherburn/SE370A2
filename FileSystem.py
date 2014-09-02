@@ -23,7 +23,7 @@ class FileSystem(object):
         line = self._prompt()
         while line != Constants.QUIT:
             command = line.split()[0]
-            line = line[:len(command)]  # Command is the first option
+            line = line[len(command):].lstrip()  # Command is the first option
 
             if command == Constants.PWD:
                 self._pwd()
@@ -56,10 +56,11 @@ class FileSystem(object):
             self.current_directory = self.current_directory.get_directory(line[1:])
 
     def _create(self, line):
+        print("Match:", line[0], Constants.ROOT, line[0] == Constants.ROOT)
         if line[0] == Constants.ROOT:
             self.root.add_file(line[1:])
         else:
-            self.current_directory.add_file(line[1:])
+            self.current_directory.add_file(line)
 
 
 if __name__ == "__main__":

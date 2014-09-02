@@ -32,7 +32,7 @@ class FileTrie(object):
     def get_full_name(self):
         if self.parent:
             full_name = self.parent.get_full_name() + self.get_name()
-            if self.is_directory:
+            if self.is_directory():
                 full_name += Constants.DIRECTORY_DIVIDER
             return full_name
         else:
