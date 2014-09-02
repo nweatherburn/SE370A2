@@ -39,3 +39,7 @@ DIRECTORY_NAME = "A2dir"
 DIRECTORY_DIVIDER = "-"
 
 ROOT = "-"
+
+INDENT = "    "
+
+PARENT_DIR = ".."

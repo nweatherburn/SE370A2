@@ -38,6 +38,9 @@ class FileSystem(object):
             elif command == Constants.RLS:
                 self._rls()
 
+            elif command == Constants.TREE:
+                self._tree(line)
+
             elif command == Constants.CREATE:
                 self._create(line)
 
@@ -56,6 +59,16 @@ class FileSystem(object):
     def _pwd(self):
         print(self.current_directory.get_full_name())
 
+    def _cd(self, line):
+        if len(line) == 0:
+            self.current_directory = self.root
+        elif line == Constants.PARENT_DIR:
+            self.current_directory = self.current_directory.get_parent()
+        elif line[0] == Constants.ROOT:
+            self.current_directory = self.root.get_directory(line[1:])
+        else:
+            self.current_directory = self.current_directory.get_directory(line)
+
     def _ls(self, line):
         if len(line) == 0:
             self.current_directory.list_files()
@@ -69,13 +82,15 @@ class FileSystem(object):
     def _rls(self):
         subprocess.call(["ls", "-l", Constants.DIRECTORY_NAME])
 
-    def _cd(self, line):
+    def _tree(self, line):
         if len(line) == 0:
-            self.current_directory = self.root
+            self.current_directory.tree()
         elif line[0] == Constants.ROOT:
-            self.current_directory = self.root.get_directory(line[1:])
+            directory = self.root.get_directory(line[1:])
+            directory.tree()
         else:
-            self.current_directory = self.current_directory.get_directory(line)
+            directory = self.current_directory.get_directory(line)
+            directory.tree()
 
     def _create(self, line):
         if line[0] == Constants.ROOT:

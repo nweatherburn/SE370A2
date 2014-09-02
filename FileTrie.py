@@ -48,8 +48,11 @@ class FileTrie(object):
             self.children[path[0]] = FileTrie(path[0], False, self)
             self.children[path[0]]._create_as_file()
         else:
-            child = FileTrie(path[0], True, self)
-            self.children[path[0]] = child
+            if path[0] in self.children:
+                child = self.children[path[0]]
+            else:
+                child = FileTrie(path[0], True, self)
+                self.children[path[0]] = child
             child._add_file(path[1:])
 
     def get_parent(self):
@@ -57,6 +60,9 @@ class FileTrie(object):
 
     def get_directory(self, directory_name):
         path = directory_name.split(Constants.DIRECTORY_DIVIDER)
+        if len(path) > 0 and path[-1] == '':
+            del path[-1]
+
         return self._get_directory(path)
 
     def _get_directory(self, path):
@@ -77,3 +83,20 @@ class FileTrie(object):
                 print("f:", name)
             else:
                 print("d:", name)
+
+    def tree(self, depth=0):
+        self.print_self(depth)
+
+        for name, child in sorted(self.children.items()):
+            if child.is_directory():
+                child.tree(depth + 1)
+            else:
+                child.tree(depth)
+
+    def print_self(self, depth=0):
+        if self.is_directory():
+            name = self.get_full_name()
+            print(Constants.INDENT * depth + name)
+            print(Constants.INDENT * depth + '=' * len(name))
+        else:
+            print(Constants.INDENT * depth + self.get_name())
