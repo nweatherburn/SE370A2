@@ -11,6 +11,7 @@ http://en.wikipedia.org/wiki/Trie
 """
 
 import Constants
+import os
 
 
 class FileTrie(object):
@@ -38,11 +39,11 @@ class FileTrie(object):
         else:
             return Constants.ROOT
 
-    def add_file(self, filename):
+    def add_file(self, filename, create_file=True):
         path = filename.split(Constants.DIRECTORY_DIVIDER)
-        self._add_file(path)
+        self._add_file(path, create_file)
 
-    def _add_file(self, path):
+    def _add_file(self, path, create_file):
         if len(path) == 1:
             # Is file
             self.children[path[0]] = FileTrie(path[0], False, self)
@@ -53,10 +54,14 @@ class FileTrie(object):
             else:
                 child = FileTrie(path[0], True, self)
                 self.children[path[0]] = child
-            child._add_file(path[1:])
+            if create_file:
+                child._add_file(path[1:])
 
     def get_parent(self):
         return self.parent
+
+    def get_file(self, file_name):
+        self.get_directory(file_name)
 
     def get_directory(self, directory_name):
         path = directory_name.split(Constants.DIRECTORY_DIVIDER)
@@ -100,3 +105,24 @@ class FileTrie(object):
             print(Constants.INDENT * depth + '=' * len(name))
         else:
             print(Constants.INDENT * depth + self.get_name())
+
+    def delete(self):
+        if self.is_directory():
+            self._delete_directory()
+        elif self.is_file():
+            self._delete_file()
+
+        if self.parent:
+            self.parent._delete_child(self.get_name())
+
+    def _delete_directory(self):
+        assert self.is_directory()
+        for name, child in self.children.items():
+            child.delete()
+
+    def _delete_file(self):
+        file_name = Constants.DIRECTORY_NAME + '/' + self.get_full_name()
+        os.remove(file_name)
+
+    def _delete_child(self, child_name):
+        del self.children[child_name]
