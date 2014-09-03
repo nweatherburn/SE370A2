@@ -59,7 +59,7 @@ class FileSystem(object):
             elif command == Constants.ADD:
                 self._add(line)
 
-            elif command == Constant.CAT:
+            elif command == Constants.CAT:
                 self._cat(line)
 
             elif command == Constants.DELETE:
@@ -126,10 +126,22 @@ class FileSystem(object):
             self.current_directory.add_file(line)
 
     def _add(self, line):
-        pass
+        if line[0] == Constants.ROOT:
+            index_of_space = line.find(' ')
+            f = self.root.get_file(line[1:index_of_space])
+            f.append(line[index_of_space + 1:])
+        else:
+            index_of_space = line.find(' ')
+            f = self.root.get_file(line[:index_of_space])
+            f.append(line[index_of_space + 1:])
 
     def _cat(self, line):
-        pass
+        if line[0] == Constants.ROOT:
+            f = self.root.get_file(line[1:])
+            f.cat()
+        else:
+            f = self.current_directory.get_file(line)
+            f.cat()
 
     def _delete(self, line):
         if line[0] == Constants.ROOT:
