@@ -30,9 +30,9 @@ class FileTrie(object):
     def _get_name(self):
         return self.name
 
-    def _get_full_name(self):
+    def get_full_name(self):
         if self.parent:
-            full_name = self.parent._get_full_name() + self._get_name()
+            full_name = self.parent.get_full_name() + self._get_name()
             if self._is_directory():
                 full_name += Constants.DIRECTORY_DIVIDER
             return full_name
@@ -40,7 +40,7 @@ class FileTrie(object):
             return Constants.ROOT
 
     def _get_file_name(self):
-        return Constants.DIRECTORY_NAME + '/' + self._get_full_name()
+        return Constants.DIRECTORY_NAME + '/' + self.get_full_name()
 
     def add_file(self, filename, create_file=True):
         path = filename.split(Constants.DIRECTORY_DIVIDER)
@@ -60,7 +60,7 @@ class FileTrie(object):
                 self.children[path[0]] = child
             child._add_file(path[1:], create_file)
 
-    def _get_parent(self):
+    def get_parent(self):
         return self.parent
 
     def get_file(self, file_name):
@@ -75,7 +75,7 @@ class FileTrie(object):
         if len(path) > 0 and path[-1] == '':
             del path[-1]
 
-        dir = self._get_directory(path)
+        dir = self._get_child(path)
         assert dir._is_directory()
         return dir
 
@@ -109,7 +109,7 @@ class FileTrie(object):
 
     def _print_self(self, depth=0):
         if self._is_directory():
-            name = self._get_full_name()
+            name = self.get_full_name()
             print(Constants.INDENT * depth + name)
             print(Constants.INDENT * depth + '=' * len(name))
         else:
@@ -122,10 +122,9 @@ class FileTrie(object):
             self._delete_file()
 
         if self.parent:
-            self.parent._delete_child(self.get_name())
+            self.parent._delete_child(self._get_name())
 
     def _delete_directory(self):
-        print("removing directory")
         for name, child in self.children.items():
             if child._is_directory():
                 child._delete_directory()
@@ -135,7 +134,6 @@ class FileTrie(object):
         self.children = {}
 
     def _delete_file(self):
-        print("removing file")
         file_name = self._get_file_name()
         os.remove(file_name)
 
